@@ -23,7 +23,7 @@ namespace PoluclinicTest
             if (_doctors != null) return _doctors;
 
             var doctorsReader = new PolyclinicFileReader();
-            _doctors = doctorsReader.ReadDoctor("csv/doctors.csv");
+            _doctors = doctorsReader.ReadDoctor("doctors.csv");
             return _doctors;
         }
 

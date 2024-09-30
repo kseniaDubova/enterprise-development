@@ -1,15 +1,15 @@
-using PolyclinicClasses;
+п»їusing PolyclinicClasses;
 
 namespace PoluclinicTest
 {
     /// <summary>
-    /// Тестирование с использованием данных из подготовленных файлов
+    /// РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј РґР°РЅРЅС‹С… РёР· РїРѕРґРіРѕС‚РѕРІР»РµРЅРЅС‹С… С„Р°Р№Р»РѕРІ
     /// </summary>
-    public class PolyclinicUnitTest(PolyclinicFixture reader): IClassFixture<PolyclinicFixture>
+    public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<PolyclinicFixture>
     {
         private PolyclinicFixture _reader = reader;
         /// <summary>
-        /// Проверка вывода всех докторов, опыт которых больше 10 лет
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° РІСЃРµС… РґРѕРєС‚РѕСЂРѕРІ, РѕРїС‹С‚ РєРѕС‚РѕСЂС‹С… Р±РѕР»СЊС€Рµ 10 Р»РµС‚
         /// </summary>
         [Fact]
         public void TestExperienceOfDoctors()
@@ -21,7 +21,7 @@ namespace PoluclinicTest
         }
 
         /// <summary>
-        /// Проверка вывода всех пациентов указанного доктора, сортировка по имени
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° РІСЃРµС… РїР°С†РёРµРЅС‚РѕРІ СѓРєР°Р·Р°РЅРЅРѕРіРѕ РґРѕРєС‚РѕСЂР°, СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РёРјРµРЅРё
         /// </summary>
         [Fact]
         public void TestPatientsOfDoctor()
@@ -39,7 +39,7 @@ namespace PoluclinicTest
         }
 
         /// <summary>
-        /// Проверка вывода здоровых на данный момент пациентов
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° Р·РґРѕСЂРѕРІС‹С… РЅР° РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ РїР°С†РёРµРЅС‚РѕРІ
         /// </summary>
         [Fact]
         public void TestHealthyPatients()
@@ -53,7 +53,7 @@ namespace PoluclinicTest
         }
 
         /// <summary>
-        /// Проверка вывода количества приемов пациентов по врачам за месяц
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° РєРѕР»РёС‡РµСЃС‚РІР° РїСЂРёРµРјРѕРІ РїР°С†РёРµРЅС‚РѕРІ РїРѕ РІСЂР°С‡Р°Рј Р·Р° РјРµСЃСЏС†
         /// </summary>
         [Fact]
         public void TestCountAppointmentsForDoctors()
@@ -78,7 +78,7 @@ namespace PoluclinicTest
         }
 
         /// <summary>
-        /// Проверка вывода топа заболеваний
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° С‚РѕРїР° Р·Р°Р±РѕР»РµРІР°РЅРёР№
         /// </summary>
         [Fact]
         public void TestTopOfSpecialization()
@@ -96,11 +96,11 @@ namespace PoluclinicTest
         }
 
         /// <summary>
-        /// Проверка вывода пациентов, записаных к нескольким врачам, сортировка по имени
+        /// РџСЂРѕРІРµСЂРєР° РІС‹РІРѕРґР° РїР°С†РёРµРЅС‚РѕРІ, Р·Р°РїРёСЃР°РЅС‹С… Рє РЅРµСЃРєРѕР»СЊРєРёРј РІСЂР°С‡Р°Рј, СЃРѕСЂС‚РёСЂРѕРІРєР° РїРѕ РёРјРµРЅРё
         /// </summary>
         [Fact]
-        public void TestPatientsWithSeveralAppointment() 
-        { 
+        public void TestPatientsWithSeveralAppointment()
+        {
             var today = DateTime.Today;
             var tmp = _reader.GetAppointment()
                 .Where(a => (today.Year - a.PatientId.Birth.Year) > 30)
