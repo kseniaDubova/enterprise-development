@@ -36,7 +36,7 @@ namespace PoluclinicTest
             if (_patients != null) return _patients;
 
             var patientsReader = new PolyclinicFileReader();
-            _patients = patientsReader.ReadPatient("csv/patients.csv");
+            _patients = patientsReader.ReadPatient("patients.csv");
             return _patients;
         }
 
@@ -49,7 +49,7 @@ namespace PoluclinicTest
             if (_appointments != null) return _appointments;
 
             var appointmentsReader = new PolyclinicFileReader();
-            _appointments = appointmentsReader.ReadAppointment("csv/appointments.csv", "csv/doctors.csv", "csv/patients.csv");
+            _appointments = appointmentsReader.ReadAppointment("appointments.csv", "doctors.csv", "patients.csv");
             return _appointments;
         }
     }
