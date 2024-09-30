@@ -25,5 +25,26 @@
         /// Специализация
         /// </summary>
         public required SpecializationTypes Specialization { get; set; }
+        /// <summary>
+        /// Сравнение докторов
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is Doctor other)
+            {
+                return this.Password == other.Password;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Поля для сравнений
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Password.GetHashCode();
+        }
     }
 }

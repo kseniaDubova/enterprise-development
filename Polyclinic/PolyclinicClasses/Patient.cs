@@ -21,5 +21,26 @@
         /// Адресс
         /// </summary>
         public required string Adress { get; set; }
+        /// <summary>
+        /// Сравнение пациентов
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is Patient other)
+            {
+                return this.Password == other.Password;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Поля для сравнений
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Password.GetHashCode();
+        }
     }
 }

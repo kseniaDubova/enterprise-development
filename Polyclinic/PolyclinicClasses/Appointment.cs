@@ -12,11 +12,11 @@
         /// <summary>
         /// Индификатор пациента
         /// </summary>
-        public required int PatientId { get; set; }
+        public required Patient PatientId { get; set; }
         /// <summary>
         /// Индификатор доктора
         /// </summary>
-        public required int DoctorId { get; set; }
+        public required Doctor DoctorId { get; set; }
         /// <summary>
         /// Дата и время посещения
         /// </summary>

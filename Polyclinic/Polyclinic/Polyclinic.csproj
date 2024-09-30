@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PoluclinicTest\PoluclinicTest.csproj" />
+    <ProjectReference Include="..\PolyclinicClasses\PolyclinicClasses.csproj" />
+  </ItemGroup>
+
 </Project>
