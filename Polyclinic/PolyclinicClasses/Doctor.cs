@@ -12,7 +12,7 @@ public class Doctor
     /// <summary>
     /// Паспорт
     /// </summary>
-    public required int Passport { get; set; }
+    public required string Passport { get; set; }
     /// <summary>
     /// ФИО
     /// </summary>
@@ -24,14 +24,9 @@ public class Doctor
     /// <summary>
     /// Опыт работя
     /// </summary>
-    public required float Experience { get; set; }
+    public required double Experience { get; set; }
     /// <summary>
     /// Специализация
     /// </summary>
     public required SpecializationTypes Specialization { get; set; }
-    /// <summary>
-    /// Сравнение докторов
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
 }

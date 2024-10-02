@@ -15,27 +15,24 @@ public class PolyclinicFileReader()
     /// <returns></returns>
     public static List<Doctor> ReadDoctor(string fileName)
     {
-        using var steamReader = new StreamReader(fileName);
+        using var streamReader = new StreamReader(fileName);
         var doctors = new List<Doctor>();
 
-        while (!steamReader.EndOfStream)
+        while (!streamReader.EndOfStream)
         {
-            var line = steamReader.ReadLine();
+            var line = streamReader.ReadLine();
             if (line == null) continue;
             var tokens = line.Split(',');
 
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                tokens[i] = tokens[i].Trim('"');
-            }
+            tokens = tokens.Select(token => token.Trim('"')).ToArray();
 
             var doctor = new Doctor
             {
                 Id = int.Parse(tokens[0]),
-                Passport = int.Parse(tokens[1]),
+                Passport = tokens[1],
                 FullName = tokens[2],
                 Birth = DateTime.ParseExact(tokens[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                Experience = float.Parse(tokens[4]),
+                Experience = double.Parse(tokens[4]),
                 Specialization = (SpecializationTypes)Enum.Parse(typeof(SpecializationTypes), tokens[5]),
             };
             doctors.Add(doctor);
@@ -50,24 +47,21 @@ public class PolyclinicFileReader()
     /// <returns></returns>
     public static List<Patient> ReadPatient(string fileName)
     {
-        using var steamReader = new StreamReader(fileName);
+        using var streamReader = new StreamReader(fileName);
         var patients = new List<Patient>();
 
-        while (!steamReader.EndOfStream)
+        while (!streamReader.EndOfStream)
         {
-            var line = steamReader.ReadLine();
+            var line = streamReader.ReadLine();
             if (line == null) continue;
             var tokens = line.Split(',');
 
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                tokens[i] = tokens[i].Trim('"');
-            }
+            tokens = tokens.Select(token => token.Trim('"')).ToArray();
 
             var patient = new Patient
             {
                 Id = int.Parse(tokens[0]),
-                Passport = int.Parse(tokens[1]),
+                Passport = tokens[1],
                 FullName = tokens[2],
                 Birth = DateTime.ParseExact(tokens[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),
                 Adress = tokens[4],
@@ -84,14 +78,14 @@ public class PolyclinicFileReader()
     /// <param name="doctors"></param>
     /// <returns></returns>
 
-    public static Doctor? FindDoctor(int passport, List<Doctor> doctors) => doctors.FirstOrDefault(d => d.Passport == passport);
+    public static Doctor? FindDoctor(string passport, List<Doctor> doctors) => doctors.FirstOrDefault(d => d.Passport == passport);
     /// <summary>
     /// Поиск по паспорту в списке пациентов
     /// </summary>
     /// <param name="passport"></param>
     /// <param name="patients"></param>
     /// <returns></returns>
-    public static Patient FindPatient(int passport, List<Patient> patients) => patients.FirstOrDefault(p => p.Passport == passport); 
+    public static Patient? FindPatient(string passport, List<Patient> patients) => patients.FirstOrDefault(p => p.Passport == passport); 
     /// <summary>
     /// Чтение из файла списка посещений
     /// </summary>
@@ -101,26 +95,23 @@ public class PolyclinicFileReader()
     /// <returns></returns>
     public static List<Appointment> ReadAppointment(string fileAppointment, string fileDoctor, string filePatient)
     {
-        using var steamReader = new StreamReader(fileAppointment);
+        using var streamReader = new StreamReader(fileAppointment);
         var appointments = new List<Appointment>();
         List<Patient> patients = ReadPatient(filePatient);
         List<Doctor> doctors = ReadDoctor(fileDoctor);
 
-        while (!steamReader.EndOfStream)
+        while (!streamReader.EndOfStream)
         {
-            var line = steamReader.ReadLine();
+            var line = streamReader.ReadLine();
             if (line == null) continue;
             var tokens = line.Split(',');
 
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                tokens[i] = tokens[i].Trim('"');
-            }
+            tokens = tokens.Select(token => token.Trim('"')).ToArray();
 
-            int doctorId = int.Parse(tokens[2]);
+            string doctorId = tokens[2];
             Doctor? doctor = FindDoctor(doctorId, doctors);
 
-            int patientId = int.Parse(tokens[1]);
+            string patientId = tokens[1];
             Patient? patient = FindPatient(patientId, patients);
 
             if(doctor == null || patient == null)

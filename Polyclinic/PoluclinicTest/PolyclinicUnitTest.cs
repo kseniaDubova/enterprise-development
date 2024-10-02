@@ -5,16 +5,16 @@ namespace PoluclinicTest;
 /// <summary>
 /// Тестирование с использованием данных из подготовленных файлов
 /// </summary>
-public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<PolyclinicFixture>
+public class PolyclinicUnitTest(PolyclinicFixture fixture) : IClassFixture<PolyclinicFixture>
 {
-    private readonly PolyclinicFixture _reader = reader;
+    private readonly PolyclinicFixture _fixture = fixture;
     /// <summary>
     /// Проверка вывода всех докторов, опыт которых больше 10 лет
     /// </summary>
     [Fact]
     public void TestExperienceOfDoctors()
     {
-        var doctors = _reader.Doctors
+        var doctors = _fixture.Doctors
             .Where(d => d.Experience > 10).ToList();
 
         Assert.Equal(4, doctors.Count);
@@ -28,16 +28,16 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
     {
         var doctorId = 3;
 
-        var patient = _reader.Appointments
-            .Where(a => a.Doctor.Id == 3)
+        var patients = _fixture.Appointments
+            .Where(a => a.Doctor.Id == doctorId)
             .Select(p => p.Patient)
             .Distinct()
             .OrderBy(p => p.FullName)
             .ToList();
 
-        Assert.Equal(4, patient.Count);
-        Assert.Equal("Akiro", patient[0].FullName);
-        Assert.Equal("Walmart", patient[3].FullName);
+        Assert.Equal(4, patients.Count);
+        Assert.Equal("Akiro", patients[0].FullName);
+        Assert.Equal("Walmart", patients[3].FullName);
     }
 
     /// <summary>
@@ -46,13 +46,13 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
     [Fact]
     public void TestHealthyPatients()
     {
-        var patient = _reader.Appointments
+        var patients = _fixture.Appointments
             .Where(a => a.Conclusion == ConclusionTypes.Healthy)
             .Select(p => p.Patient)
             .Distinct()
             .ToList();
 
-        Assert.Equal(6, patient.Count);
+        Assert.Equal(6, patients.Count);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
     {
         var month = new DateTime(2024, 9, 1);
 
-        var appointment = _reader.Appointments
+        var appointments = _fixture.Appointments
             .Where(a => a.Date >= month)
             .GroupBy(p => p.Doctor.Passport)
             .Select(g => new
@@ -74,11 +74,11 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
             .OrderBy(g => g.Doctor)
             .ToList();
 
-        Assert.Equal(1, appointment[0].Count);
-        Assert.Equal(3, appointment[1].Count);
-        Assert.Equal(1, appointment[2].Count);
-        Assert.Equal(1, appointment[3].Count);
-        Assert.Equal(2, appointment[4].Count);
+        Assert.Equal(1, appointments[0].Count);
+        Assert.Equal(3, appointments[1].Count);
+        Assert.Equal(1, appointments[2].Count);
+        Assert.Equal(1, appointments[3].Count);
+        Assert.Equal(2, appointments[4].Count);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
     [Fact]
     public void TestTopOfSpecialization()
     {
-        var spetialization = _reader.Appointments
+        var spetializations = _fixture.Appointments
             .GroupBy(p => p.Doctor.Specialization)
             .Select(g => new
             {
@@ -98,10 +98,10 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
             .Take(5)
             .ToList();
 
-        Assert.Equal(8, spetialization[0].Count);
-        Assert.Equal(4, spetialization[1].Count);
-        Assert.Equal(3, spetialization[2].Count);
-        Assert.Equal(2, spetialization[3].Count);
+        Assert.Equal(8, spetializations[0].Count);
+        Assert.Equal(4, spetializations[1].Count);
+        Assert.Equal(3, spetializations[2].Count);
+        Assert.Equal(2, spetializations[3].Count);
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
     {
         var today = new DateTime(2024, 9, 1);
 
-        var patient = _reader.Appointments
+        var patients = _fixture.Appointments
             .Where(a => (today.Year - a.Patient.Birth.Year) > 30)
             .GroupBy(p => p.Patient)
             .Where(g => g.Select(a => a.Doctor.Passport).Distinct().Count() > 1)
@@ -120,6 +120,6 @@ public class PolyclinicUnitTest(PolyclinicFixture reader) : IClassFixture<Polycl
             .OrderBy(p => p.Birth)
             .ToList();
 
-        Assert.Equal(2, patient.Count);
+        Assert.Equal(2, patients.Count);
     }
 }

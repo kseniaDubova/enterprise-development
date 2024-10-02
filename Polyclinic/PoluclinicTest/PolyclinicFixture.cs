@@ -10,9 +10,9 @@ public class PolyclinicFixture
     /// <summary>
     /// Объявление списков данных
     /// </summary>
-    public List<Doctor>? Doctors { get; set; }
-    public List<Patient>? Patients { get; set; }
-    public List<Appointment>? Appointments { get; set; }
+    public List<Doctor> Doctors { get; set; }
+    public List<Patient> Patients { get; set; }
+    public List<Appointment> Appointments { get; set; }
     /// <summary>
     /// Конструктор чтения файлов
     /// </summary>

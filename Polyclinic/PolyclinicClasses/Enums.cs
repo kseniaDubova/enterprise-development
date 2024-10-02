@@ -1,5 +1,4 @@
-﻿
-namespace PolyclinicClasses;
+﻿namespace PolyclinicClasses;
 
 /// <summary>
 /// Специализации врачей

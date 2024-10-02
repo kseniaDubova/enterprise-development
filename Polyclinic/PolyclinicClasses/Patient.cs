@@ -12,7 +12,7 @@ public class Patient
     /// <summary>
     /// Паспорт
     /// </summary>
-    public required int Passport { get; set; }
+    public required string Passport { get; set; }
     /// <summary>
     /// ФИО
     /// </summary>
