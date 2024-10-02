@@ -1,10 +1,9 @@
-﻿namespace Polyclinic
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
+﻿namespace Polyclinic;
 
-        }
+class Program
+{
+    static void Main(string[] args)
+    {
+
     }
 }
