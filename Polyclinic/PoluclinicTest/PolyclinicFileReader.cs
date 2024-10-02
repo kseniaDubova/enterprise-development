@@ -1,151 +1,144 @@
 ﻿using PolyclinicClasses;
 using System.Globalization;
 
-namespace PoluclinicTest
+namespace PoluclinicTest;
+
+/// <summary>
+/// Чтение из файлов списков посещений, докторов, пациентов
+/// </summary>
+public class PolyclinicFileReader()
 {
     /// <summary>
-    /// Чтение из файлов списков посещений, докторов, пациентов
+    /// Чтение из файла списка докторов
     /// </summary>
-    public class PolyclinicFileReader()
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static List<Doctor> ReadDoctor(string fileName)
     {
-        /// <summary>
-        /// Чтение из файла списка докторов
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public List<Doctor> ReadDoctor(string fileName)
-        {
-            var steamReader = new StreamReader(fileName);
-            var doctors = new List<Doctor>();
+        using var steamReader = new StreamReader(fileName);
+        var doctors = new List<Doctor>();
 
-            while (!steamReader.EndOfStream)
+        while (!steamReader.EndOfStream)
+        {
+            var line = steamReader.ReadLine();
+            if (line == null) continue;
+            var tokens = line.Split(',');
+
+            for (int i = 0; i < tokens.Length; i++)
             {
-                var line = steamReader.ReadLine();
-                if (line == null) continue;
-                var tokens = line.Split(',');
-
-                for (int i = 0; i < tokens.Length; i++)
-                {
-                    tokens[i] = tokens[i].Trim('"');
-                }
-
-                var doctor = new Doctor
-                {
-                    Password = int.Parse(tokens[0]),
-                    Name = tokens[1],
-                    Birth = DateTime.ParseExact(tokens[2], "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Experience = int.Parse(tokens[3]),
-                    Specialization = (SpecializationTypes)Enum.Parse(typeof(SpecializationTypes), tokens[4]),
-                };
-                doctors.Add(doctor);
-
+                tokens[i] = tokens[i].Trim('"');
             }
-            steamReader.Dispose();
-            return doctors;
-        }
-        /// <summary>
-        /// Чтение из файла списка пациентов
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        public List<Patient> ReadPatient(string fileName)
-        {
-            var steamReader = new StreamReader(fileName);
-            var patients = new List<Patient>();
 
-            while (!steamReader.EndOfStream)
+            var doctor = new Doctor
             {
-                var line = steamReader.ReadLine();
-                if (line == null) continue;
-                var tokens = line.Split(',');
+                Id = int.Parse(tokens[0]),
+                Passport = int.Parse(tokens[1]),
+                FullName = tokens[2],
+                Birth = DateTime.ParseExact(tokens[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                Experience = float.Parse(tokens[4]),
+                Specialization = (SpecializationTypes)Enum.Parse(typeof(SpecializationTypes), tokens[5]),
+            };
+            doctors.Add(doctor);
 
-                for (int i = 0; i < tokens.Length; i++)
-                {
-                    tokens[i] = tokens[i].Trim('"');
-                }
-
-                var patient = new Patient
-                {
-                    Password = int.Parse(tokens[0]),
-                    Name = tokens[1],
-                    Birth = DateTime.ParseExact(tokens[2], "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Adress = tokens[3],
-                };
-                patients.Add(patient);
-
-            }
-            steamReader.Dispose();
-            return patients;
         }
-        /// <summary>
-        /// Поиск по паспорту в списке докторов
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="doctors"></param>
-        /// <returns></returns>
-        public Doctor findDoctor(int password, List<Doctor> doctors)
-        { 
-            return doctors.FirstOrDefault(d => d.Password == password); ;
-        }
-        /// <summary>
-        /// Поиск по паспорту в списке пациентов
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="patients"></param>
-        /// <returns></returns>
-        public Patient findPatient(int password, List<Patient> patients)
+        return doctors;
+    }
+    /// <summary>
+    /// Чтение из файла списка пациентов
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static List<Patient> ReadPatient(string fileName)
+    {
+        using var steamReader = new StreamReader(fileName);
+        var patients = new List<Patient>();
+
+        while (!steamReader.EndOfStream)
         {
-            return patients.FirstOrDefault(p => p.Password == password); ;
-        }
-        /// <summary>
-        /// Чтение из файла списка посещений
-        /// </summary>
-        /// <param name="fileAppointment"></param>
-        /// <param name="fileDoctor"></param>
-        /// <param name="filePatient"></param>
-        /// <returns></returns>
-        public List<Appointment> ReadAppointment(string fileAppointment, string fileDoctor, string filePatient)
-        {
-            var steamReader = new StreamReader(fileAppointment);
-            var appointments = new List<Appointment>();
-            List<Patient> patients = ReadPatient(filePatient);
-            List<Doctor> doctors = ReadDoctor(fileDoctor);
+            var line = steamReader.ReadLine();
+            if (line == null) continue;
+            var tokens = line.Split(',');
 
-            while (!steamReader.EndOfStream)
+            for (int i = 0; i < tokens.Length; i++)
             {
-                var line = steamReader.ReadLine();
-                if (line == null) continue;
-                var tokens = line.Split(',');
-
-                for (int i = 0; i < tokens.Length; i++)
-                {
-                    tokens[i] = tokens[i].Trim('"');
-                }
-
-                int doctorId = int.Parse(tokens[2]);
-                Doctor? doctor = findDoctor(doctorId, doctors);
-
-                int patientId = int.Parse(tokens[1]);
-                Patient? patient = findPatient(patientId, patients);
-
-                if(doctor == null || patient == null)
-                {
-                    continue;
-                }
-
-                var appointment = new Appointment
-                {
-                    Id = int.Parse(tokens[0]),
-                    PatientId = patient,
-                    DoctorId = doctor,
-                    Date = DateTime.ParseExact(tokens[3], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
-                    Conclusion = (ConclusionTypes)Enum.Parse(typeof(ConclusionTypes), tokens[4]),
-                };
-                appointments.Add(appointment);
-
+                tokens[i] = tokens[i].Trim('"');
             }
-            steamReader.Dispose();
-            return appointments;
+
+            var patient = new Patient
+            {
+                Id = int.Parse(tokens[0]),
+                Passport = int.Parse(tokens[1]),
+                FullName = tokens[2],
+                Birth = DateTime.ParseExact(tokens[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                Adress = tokens[4],
+            };
+            patients.Add(patient);
+
         }
+        return patients;
+    }
+    /// <summary>
+    /// Поиск по паспорту в списке докторов
+    /// </summary>
+    /// <param name="passport"></param>
+    /// <param name="doctors"></param>
+    /// <returns></returns>
+
+    public static Doctor? FindDoctor(int passport, List<Doctor> doctors) => doctors.FirstOrDefault(d => d.Passport == passport);
+    /// <summary>
+    /// Поиск по паспорту в списке пациентов
+    /// </summary>
+    /// <param name="passport"></param>
+    /// <param name="patients"></param>
+    /// <returns></returns>
+    public static Patient FindPatient(int passport, List<Patient> patients) => patients.FirstOrDefault(p => p.Passport == passport); 
+    /// <summary>
+    /// Чтение из файла списка посещений
+    /// </summary>
+    /// <param name="fileAppointment"></param>
+    /// <param name="fileDoctor"></param>
+    /// <param name="filePatient"></param>
+    /// <returns></returns>
+    public static List<Appointment> ReadAppointment(string fileAppointment, string fileDoctor, string filePatient)
+    {
+        using var steamReader = new StreamReader(fileAppointment);
+        var appointments = new List<Appointment>();
+        List<Patient> patients = ReadPatient(filePatient);
+        List<Doctor> doctors = ReadDoctor(fileDoctor);
+
+        while (!steamReader.EndOfStream)
+        {
+            var line = steamReader.ReadLine();
+            if (line == null) continue;
+            var tokens = line.Split(',');
+
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                tokens[i] = tokens[i].Trim('"');
+            }
+
+            int doctorId = int.Parse(tokens[2]);
+            Doctor? doctor = FindDoctor(doctorId, doctors);
+
+            int patientId = int.Parse(tokens[1]);
+            Patient? patient = FindPatient(patientId, patients);
+
+            if(doctor == null || patient == null)
+            {
+                continue;
+            }
+
+            var appointment = new Appointment
+            {
+                Id = int.Parse(tokens[0]),
+                Patient = patient,
+                Doctor = doctor,
+                Date = DateTime.ParseExact(tokens[3], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
+                Conclusion = (ConclusionTypes)Enum.Parse(typeof(ConclusionTypes), tokens[4]),
+            };
+            appointments.Add(appointment);
+
+        }
+        return appointments;
     }
 }

@@ -1,56 +1,28 @@
 ﻿using PolyclinicClasses;
 
-namespace PoluclinicTest
+namespace PoluclinicTest;
+
+/// <summary>
+/// Заполнение тестовыми данными списков посещений, докторов, пациентов
+/// </summary>
+public class PolyclinicFixture
 {
     /// <summary>
-    /// Заполнение тестовыми данными списков посещений, докторов, пациентов
+    /// Объявление списков данных
     /// </summary>
-    public class PolyclinicFixture
+    public List<Doctor>? Doctors { get; set; }
+    public List<Patient>? Patients { get; set; }
+    public List<Appointment>? Appointments { get; set; }
+    /// <summary>
+    /// Конструктор чтения файлов
+    /// </summary>
+    public PolyclinicFixture()
     {
-        /// <summary>
-        /// Объявление списков данных
-        /// </summary>
-        private List<Doctor>? _doctors;
-        private List<Patient>? _patients;
-        private List<Appointment>? _appointments;
-
-        /// <summary>
-        /// Заполнение списка докторов
-        /// </summary>
-        /// <returns></returns>
-        public List<Doctor> GetDoctors()
-        {
-            if (_doctors != null) return _doctors;
-
-            var doctorsReader = new PolyclinicFileReader();
-            _doctors = doctorsReader.ReadDoctor("doctors.csv");
-            return _doctors;
-        }
-
-        /// <summary>
-        /// Заполнение списка пациентов
-        /// </summary>
-        /// <returns></returns>
-        public List<Patient> GetPatient()
-        {
-            if (_patients != null) return _patients;
-
-            var patientsReader = new PolyclinicFileReader();
-            _patients = patientsReader.ReadPatient("patients.csv");
-            return _patients;
-        }
-
-        /// <summary>
-        /// Заполнение списка посещений
-        /// </summary>
-        /// <returns></returns>
-        public List<Appointment> GetAppointment()
-        {
-            if (_appointments != null) return _appointments;
-
-            var appointmentsReader = new PolyclinicFileReader();
-            _appointments = appointmentsReader.ReadAppointment("appointments.csv", "doctors.csv", "patients.csv");
-            return _appointments;
-        }
+        Doctors = PolyclinicFileReader.ReadDoctor(Path.Combine("data", "doctors.csv"));
+        Patients = PolyclinicFileReader.ReadPatient(Path.Combine("data", "patients.csv"));
+        Appointments = PolyclinicFileReader.ReadAppointment(
+            Path.Combine("data", "appointments.csv"),
+            Path.Combine("data", "doctors.csv"),
+            Path.Combine("data", "patients.csv"));
     }
 }
