@@ -38,10 +38,9 @@ public class ComponentsMapper(IMapper mapper)
             appointment.Conclusion = (ConclusionTypes)Enum.Parse(typeof(ConclusionTypes), value.Conclusion);
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
-            throw;
+            throw new ApplicationException("Doctor's error" + ex.Message, ex);
         }
 
         return appointment;
@@ -54,9 +53,9 @@ public class ComponentsMapper(IMapper mapper)
         {
             newDoctor.Specialization = (SpecializationTypes)Enum.Parse(typeof(SpecializationTypes), value.Specialization);
         }
-        catch(Exception) 
+        catch(Exception ex) 
         {
-            throw;
+            throw new ApplicationException("Doctor's error" + ex.Message, ex);
         };
 
         return newDoctor;
