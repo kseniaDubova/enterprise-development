@@ -9,47 +9,46 @@ public class AppointmentRepository : IRepository<Appointment, int>
     /// <summary>
     /// Вернуть все посещения
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Appointment"/></returns>
     public List<Appointment> GetAll() => _appointments;
 
     /// <summary>
     /// Вернуть посещение по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор посещений</param>
+    /// <returns><see cref="Appointment"/></returns>
     public Appointment? Get(int id) => _appointments.Find(a => a.Id == id);
 
     /// <summary>
     /// Удалить почещение по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор посещений</param>
+    /// <returns>false при ошибке,true иначе</returns>
     public bool Delete(int id)
     {
         var deletedAppounment = Get(id);
 
         if (deletedAppounment == null) return false;
 
-        _appointments.Remove(deletedAppounment);
-        return true;
+        return _appointments.Remove(deletedAppounment);
     }
 
     /// <summary>
     /// Добавить посещение
     /// </summary>
-    /// <param name="newObj"></param>
+    /// <param name="newObj">объект класса посещений</param>
     public void Post(Appointment newObj) 
     {
         newObj.Id = _appointments.Count;
         _appointments.Add(newObj);
-    } 
+    }
 
     /// <summary>
     /// Изменить посещение по идентификатора
     /// </summary>
-    /// <param name="newObj"></param>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="newObj">объект класса посещений</param>
+    /// <param name="id">идентификатор посещений</param>
+    /// <returns>false при ошибке,true иначе</returns>
     public bool Put(Appointment newObj, int id)
     {
         var oldAppointment = Get(id);

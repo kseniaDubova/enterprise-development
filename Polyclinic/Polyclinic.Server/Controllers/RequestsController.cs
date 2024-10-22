@@ -6,9 +6,9 @@ namespace Polyclinic.Server.Controllers;
 /// <summary>
 /// Класс для работы с запросами
 /// </summary>
-/// <param name="repositoryDoctor"></param>
-/// <param name="repositoryPatient"></param>
-/// <param name="repositoryAppointment"></param>
+/// <param name="repositoryDoctor">репозиторий докторов</param>
+/// <param name="repositoryPatient">репозиторий пациентов</param>
+/// <param name="repositoryAppointment">репозиторий посещений</param>
 [Route("api/[controller]")]
 [ApiController]
 public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepository<Patient, int> repositoryPatient, IRepository<Appointment, int> repositoryAppointment) : ControllerBase
@@ -16,7 +16,8 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <summary>
     /// Вывод всех докторов, опыт которых больше 10 лет
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Doctor"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("experience-doctors")]
     public ActionResult<IEnumerable<Doctor>> GetExperienceDoctors()
     {
@@ -29,8 +30,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <summary>
     /// Вывод всех пациентов указанного доктора, сортировка по имени
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор пациента</param>
+    /// <returns><see cref="Patient"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("patients-of-doctor/{id}")]
     public ActionResult<IEnumerable<Patient>> GetPatientsOfDoctor(int id)
     {
@@ -47,7 +49,8 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <summary>
     /// Вывод здоровых на данный момент пациентов
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Patient"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("healthy-patients")]
     public ActionResult<IEnumerable<Patient>> GetHealthyPatients()
     {
@@ -64,6 +67,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// Вывод количества приемов пациентов по врачам за месяц
     /// </summary>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("count-appointment")]
     public IActionResult GetCountAppointment()
     {
@@ -87,6 +91,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// Вывод топа заболеваний
     /// </summary>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("spetialisation-top")]
     public IActionResult GetSpetialisationTop()
     {
@@ -107,7 +112,8 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <summary>
     /// Вывод пациентов, записаных к нескольким врачам, сортировка по дате рождения
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Patient"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("patients-with-several-appointment")]
     public ActionResult<IEnumerable<Patient>> GetPatientsWithSeveralAppointment()
     {

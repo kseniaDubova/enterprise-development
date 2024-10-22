@@ -14,15 +14,17 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <summary>
     /// Вернуть всех докторов
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Doctor"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
     public ActionResult<IEnumerable<Doctor>> Get() => Ok(repository.GetAll());
 
     /// <summary>
     /// Вернуть доктора по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор доктора</param>
+    /// <returns><see cref="Doctor"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("{id}")]
     public ActionResult<Doctor> Get(int id)
     {
@@ -34,8 +36,9 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <summary>
     /// Добавить доктора
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">объект Dto Доктора</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpPost]
     public IActionResult Post([FromBody] DoctorDto value)
     {
@@ -49,9 +52,10 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <summary>
     /// Изменить доктора по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="value"></param>
+    /// <param name="id">идентификатор доктора</param>
+    /// <param name="value">объект Dto Доктора</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] DoctorDto value)
     {
@@ -64,8 +68,9 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <summary>
     /// Удалить доктора по идентификатору
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">идентификатор доктора</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id) => !repository.Delete(id) ? NotFound() : Ok();
 }

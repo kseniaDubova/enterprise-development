@@ -9,35 +9,34 @@ public class PatientRepository : IRepository<Patient, int>
     /// <summary>
     /// Вернуть всех пациентов
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Patient"/></returns>
     public List<Patient> GetAll () => _patients;
 
     /// <summary>
     /// Вернуть пациента по идентификатору
     /// </summary>
     /// <param name="id"></param>
-    /// <returns></returns>
+    /// <returns><see cref="Patient"/></returns>
     public Patient? Get(int id) => _patients.Find(p => p.Id == id);
 
     /// <summary>
     /// Удалить пациента по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор пациента</param>
+    /// <returns>false при ошибке,true иначе </returns>
     public bool Delete(int id)
     {
         var deletedPatient = Get(id);
 
         if (deletedPatient == null) return false; 
 
-        _patients.Remove(deletedPatient);  
-        return true;
+        return _patients.Remove(deletedPatient);
     }
 
     /// <summary>
     /// Добавить пациента
     /// </summary>
-    /// <param name="newObj"></param>
+    /// <param name="newObj">объект класса пациента</param>
     public void Post(Patient newObj) 
     {
         newObj.Id = _patients.Count;
@@ -47,9 +46,9 @@ public class PatientRepository : IRepository<Patient, int>
     /// <summary>
     /// Изменить пациента по идентификатору
     /// </summary>
-    /// <param name="newObj"></param>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="newObj">объект класса пациента</param>
+    /// <param name="id">идентификатор пациента</param>
+    /// <returns>false при ошибке,true иначе</returns>
     public bool Put(Patient newObj, int id)
     {
         var oldPatient = Get(id);

@@ -5,8 +5,18 @@ using Polyclinic.Services.Dto;
 
 namespace Polyclinic.Services;
 
+/// <summary>
+/// Класс для корректного преобразования данных из Dto в объекты
+/// </summary>
+/// <param name="mapper"></param>
 public class ComponentsMapper(IMapper mapper)
 {
+    /// <summary>
+    /// Преобразование Dto в объект класса Appointment
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ApplicationException"></exception>
     public Appointment GetAppointment(AppointmentDto value)
     {
         var appointment = mapper.Map<Appointment>(value);
@@ -45,7 +55,12 @@ public class ComponentsMapper(IMapper mapper)
 
         return appointment;
     }
-
+    /// <summary>
+    ///  Преобразование Dto в объект класса Doctors
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="ApplicationException"></exception>
     public Doctor GetDoctor(DoctorDto value)
     {
         var newDoctor = mapper.Map<Doctor>(value);

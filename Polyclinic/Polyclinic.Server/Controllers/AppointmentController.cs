@@ -14,15 +14,17 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <summary>
     /// Вернуть все посещения
     /// </summary>
-    /// <returns></returns>
+    /// <returns><see cref="Appointment"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
     public ActionResult<IEnumerable<Appointment>> Get() => Ok(repository.GetAll());
 
     /// <summary>
     /// Вернуть посещение по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /// <param name="id">идентификатор посещений</param>
+    /// <returns><see cref="Appointment"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("{id}")]
     public ActionResult<Appointment> Get(int id)
     {
@@ -34,8 +36,9 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <summary>
     /// Добавить посещение
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">объект Dto Посещений</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpPost]
     public IActionResult Post([FromBody] AppointmentDto value)
     {
@@ -49,9 +52,10 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <summary>
     /// Изменить посещение по идентификатору
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="value"></param>
+    /// <param name="id">идентификатор посещений</param>
+    /// <param name="value">объект Dto Посещений</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] AppointmentDto value) 
     {
@@ -65,8 +69,9 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <summary>
     /// Удалить посещение по идентификатору
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id">идннтификатор посещений</param>
     /// <returns></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id) => !repository.Delete(id) ? NotFound() : Ok();
 }
