@@ -4,10 +4,12 @@ using Polyclinic.Domain;
 using Polyclinic.Domain.Repositories;
 using Polyclinic.Services.Dto;
 namespace Polyclinic.Server.Controllers;
+
 /// <summary>
 /// Класс для работы с данными пациентов
 /// </summary>
 /// <param name="repository">репозиторий пациентов</param>
+/// <param name="mapper"></param>
 [Route("api/[controller]")]
 [ApiController]
 public class PatientController(IRepository<Patient, int> repository, IMapper mapper) : ControllerBase

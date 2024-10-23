@@ -11,7 +11,7 @@ namespace Polyclinic.Server.Controllers;
 /// <param name="repositoryAppointment">репозиторий посещений</param>
 [Route("api/[controller]")]
 [ApiController]
-public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepository<Patient, int> repositoryPatient, IRepository<Appointment, int> repositoryAppointment) : ControllerBase
+public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepository<Appointment, int> repositoryAppointment) : ControllerBase
 {
     /// <summary>
     /// Вывод всех докторов, опыт которых больше 10 лет
@@ -117,7 +117,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("patients-with-several-appointment")]
     public ActionResult<IEnumerable<Patient>> GetPatientsWithSeveralAppointment()
     {
-        DateTime today = DateTime.Now;
+        var today = DateTime.Now;
 
         var patients = repositoryAppointment.GetAll()
             .Where(a => (today.Year - a.Patient.Birth.Year) > 30)

@@ -4,6 +4,7 @@
 /// </summary>
 public class AppointmentRepository : IRepository<Appointment, int>
 {
+    private int _id = 0;
     private static readonly List<Appointment> _appointments = [];
 
     /// <summary>
@@ -39,7 +40,8 @@ public class AppointmentRepository : IRepository<Appointment, int>
     /// <param name="newObj">объект класса посещений</param>
     public void Post(Appointment newObj) 
     {
-        newObj.Id = _appointments.Count;
+        newObj.Id = _id;
+        _id++;
         _appointments.Add(newObj);
     }
 

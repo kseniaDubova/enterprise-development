@@ -4,6 +4,7 @@
 /// </summary>
 public class PatientRepository : IRepository<Patient, int>
 {
+    private int _id = 0;
     private static readonly List<Patient> _patients = [];
 
     /// <summary>
@@ -39,7 +40,8 @@ public class PatientRepository : IRepository<Patient, int>
     /// <param name="newObj">объект класса пациента</param>
     public void Post(Patient newObj) 
     {
-        newObj.Id = _patients.Count;
+        newObj.Id = _id;
+        _id++;
         _patients.Add(newObj);
     }
 

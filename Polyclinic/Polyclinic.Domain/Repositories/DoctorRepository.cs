@@ -4,7 +4,8 @@
 /// </summary>
 public class DoctorRepository : IRepository<Doctor, int>
 {
-    private static readonly List<Doctor> _doctors = [];//PolyclinicFileReader.FindDoctor(Path.Combine("data", "doctors.csv"));
+    private int _id = 0;
+    private static readonly List<Doctor> _doctors = [];
 
     /// <summary>
     /// Вернуть всех докторов
@@ -39,7 +40,8 @@ public class DoctorRepository : IRepository<Doctor, int>
     /// <param name="newObj">объект класса доктора</param>
     public void Post(Doctor newObj) 
     {
-        newObj.Id = _doctors.Count;
+        newObj.Id = _id;
+        _id++;
         _doctors.Add(newObj);
     }
 

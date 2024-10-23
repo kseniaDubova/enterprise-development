@@ -18,5 +18,5 @@ public class AppointmentDto
     /// <summary>
     /// Заключение
     /// </summary>
-    public string Conclusion { get; set; }
+    public string? Conclusion { get; set; }
 }
