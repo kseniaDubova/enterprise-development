@@ -7,7 +7,6 @@ namespace Polyclinic.Server.Controllers;
 /// Класс для работы с запросами
 /// </summary>
 /// <param name="repositoryDoctor">репозиторий докторов</param>
-/// <param name="repositoryPatient">репозиторий пациентов</param>
 /// <param name="repositoryAppointment">репозиторий посещений</param>
 [Route("api/[controller]")]
 [ApiController]
@@ -71,7 +70,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("count-appointment")]
     public IActionResult GetCountAppointment()
     {
-        DateTime month = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);    
+        var month = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);    
 
         var appointments = repositoryAppointment.GetAll()
             .Where(a => a.Date >= month)

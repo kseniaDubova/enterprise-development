@@ -52,11 +52,11 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
             return NotFound("doctor not found");
 
         var appointment = mapper.Map<Appointment>(value);
+        appointment.Doctor = doctor;
+        appointment.Patient = patient;
 
         if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
             appointment.Conclusion = conclusion;
-        else
-            return NotFound("specialization not found");
 
         repositoryAppointment.Post(appointment);
 
@@ -84,11 +84,11 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
             return NotFound("doctor not found");
 
         var appointment = mapper.Map<Appointment>(value);
+        appointment.Doctor = doctor;
+        appointment.Patient = patient;
 
         if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
             appointment.Conclusion = conclusion;
-        else
-            return NotFound("conclision not found");
 
         appointment.Id = id;
 

@@ -45,8 +45,6 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
 
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
-        else 
-            return NotFound("specialization not found");
 
         repository.Post(doctor);
 
@@ -67,8 +65,6 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
 
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
-        else
-            return NotFound("specialization not found");
 
         return !repository.Put(doctor, id) ? NotFound() : Ok();
     }
