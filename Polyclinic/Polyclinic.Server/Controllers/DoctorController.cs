@@ -3,7 +3,6 @@ using Polyclinic.Domain.Repositories;
 using Polyclinic.Domain;
 using AutoMapper;
 using Polyclinic.Services.Dto;
-using Polyclinic.Services;
 
 namespace Polyclinic.Server.Controllers;
 
@@ -42,8 +41,13 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     [HttpPost]
     public IActionResult Post([FromBody] DoctorDto value)
     {
-        ComponentsMapper servise = new(mapper);
-        var doctor = servise.GetDoctor(value);
+        var doctor = mapper.Map<Doctor>(value);
+
+        if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
+            doctor.Specialization = specialization;
+        else 
+            return NotFound("specialization not found");
+
         repository.Post(doctor);
 
         return Ok();
@@ -59,8 +63,12 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] DoctorDto value)
     {
-        ComponentsMapper servise = new(mapper);
-        var doctor = servise.GetDoctor(value);
+        var doctor = mapper.Map<Doctor>(value);
+
+        if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
+            doctor.Specialization = specialization;
+        else
+            return NotFound("specialization not found");
 
         return !repository.Put(doctor, id) ? NotFound() : Ok();
     }

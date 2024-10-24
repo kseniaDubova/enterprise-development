@@ -1,4 +1,5 @@
 ﻿using Polyclinic.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace Polyclinic.Services.Dto;
 
@@ -23,5 +24,6 @@ public class DoctorDto
     /// <summary>
     /// Специализация
     /// </summary>
+    [EnumDataType(typeof(SpecializationTypes))]
     public required string Specialization { get; set; }
 }

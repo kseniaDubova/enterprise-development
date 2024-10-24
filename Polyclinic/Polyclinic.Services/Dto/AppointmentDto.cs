@@ -1,4 +1,5 @@
 ﻿using Polyclinic.Domain;
+using System.ComponentModel.DataAnnotations;
 namespace Polyclinic.Services.Dto;
 
 public class AppointmentDto
@@ -18,5 +19,6 @@ public class AppointmentDto
     /// <summary>
     /// Заключение
     /// </summary>
+    [EnumDataType(typeof(ConclusionTypes))]
     public string? Conclusion { get; set; }
 }

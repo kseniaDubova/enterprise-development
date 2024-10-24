@@ -3,13 +3,12 @@ using Polyclinic.Domain.Repositories;
 using Polyclinic.Domain;
 using AutoMapper;
 using Polyclinic.Services.Dto;
-using Polyclinic.Services;
 
 namespace Polyclinic.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AppointmentController(IRepository<Appointment, int> repository, IMapper mapper) : ControllerBase
+public class AppointmentController(IRepository<Appointment, int> repositoryAppointment, IRepository<Doctor, int> repositoryDoctor, IRepository<Patient, int> repositoryPatient, IMapper mapper) : ControllerBase
 {
     /// <summary>
     /// Вернуть все посещения
@@ -17,7 +16,7 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <returns><see cref="Appointment"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
-    public ActionResult<IEnumerable<Appointment>> Get() => Ok(repository.GetAll());
+    public ActionResult<IEnumerable<Appointment>> Get() => Ok(repositoryAppointment.GetAll());
 
     /// <summary>
     /// Вернуть посещение по идентификатору
@@ -28,7 +27,7 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     [HttpGet("{id}")]
     public ActionResult<Appointment> Get(int id)
     {
-        var appointment = repository.Get(id);
+        var appointment = repositoryAppointment.Get(id);
 
         return appointment != null ? Ok(appointment) : NotFound();
     }
@@ -42,9 +41,24 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     [HttpPost]
     public IActionResult Post([FromBody] AppointmentDto value)
     {
-        ComponentsMapper servise = new(mapper);
-        var appointment = servise.GetAppointment(value);
-        repository.Post(appointment);
+        var patient = repositoryPatient.Get(value.IdPatient);
+
+        if (patient == null)
+            return NotFound("patient not found");
+
+        var doctor = repositoryDoctor.Get(value.IdDoctor);
+
+        if (doctor == null)
+            return NotFound("doctor not found");
+
+        var appointment = mapper.Map<Appointment>(value);
+
+        if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
+            appointment.Conclusion = conclusion;
+        else
+            return NotFound("specialization not found");
+
+        repositoryAppointment.Post(appointment);
 
         return Ok();
     }
@@ -59,11 +73,26 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     [HttpPut("{id}")]
     public IActionResult Put(int id, [FromBody] AppointmentDto value) 
     {
-        ComponentsMapper servise = new(mapper);
-        var appointment = servise.GetAppointment(value);
+        var patient = repositoryPatient.Get(value.IdPatient);
+
+        if (patient == null)
+            return NotFound("patient not found");
+
+        var doctor = repositoryDoctor.Get(value.IdDoctor);
+
+        if (doctor == null)
+            return NotFound("doctor not found");
+
+        var appointment = mapper.Map<Appointment>(value);
+
+        if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
+            appointment.Conclusion = conclusion;
+        else
+            return NotFound("conclision not found");
+
         appointment.Id = id;
 
-        return !repository.Put(appointment, id) ? NotFound() : Ok(); 
+        return !repositoryAppointment.Put(appointment, id) ? NotFound() : Ok(); 
     }
 
     /// <summary>
@@ -73,5 +102,5 @@ public class AppointmentController(IRepository<Appointment, int> repository, IMa
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id) => !repository.Delete(id) ? NotFound() : Ok();
+    public IActionResult Delete(int id) => !repositoryAppointment.Delete(id) ? NotFound() : Ok();
 }
