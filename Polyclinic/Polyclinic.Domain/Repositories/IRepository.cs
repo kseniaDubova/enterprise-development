@@ -10,27 +10,27 @@ public interface IRepository<T, TKey>
     /// Вернуть все элементы
     /// </summary>
     /// <returns></returns>
-    public List<T> GetAll();
+    public Task<List<T>> GetAll();
 
     /// <summary>
     /// Вернуть элемент по идентификатору
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public T? Get(TKey id);
+    public Task<T?> Get(TKey id);
 
     /// <summary>
     /// Удалить элемент по идентификатору
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public bool Delete(TKey id);
+    public Task<bool> Delete(TKey id);
 
     /// <summary>
     /// Добавить элемент
     /// </summary>
     /// <param name="newObj"></param>
-    public void Post(T newObj);
+    public Task Post(T newObj);
 
     /// <summary>
     /// Изменить элемент по идентификатору
@@ -38,5 +38,5 @@ public interface IRepository<T, TKey>
     /// <param name="newObj"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public bool Put(T newObj, TKey id);
+    public Task<bool> Put(T newObj, TKey id);
 }

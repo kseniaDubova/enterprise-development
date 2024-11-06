@@ -1,48 +1,49 @@
-﻿namespace Polyclinic.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Polyclinic.Domain.Repositories;
 /// <summary>
 /// Репозиторий докторов
 /// </summary>
-public class DoctorRepository : IRepository<Doctor, int>
+public class DoctorRepository(PolyclinicDbContext context) : IRepository<Doctor, int>
 {
-    private int _id = 0;
-    private static readonly List<Doctor> _doctors = [];
-
     /// <summary>
     /// Вернуть всех докторов
     /// </summary>
     /// <returns><see cref="Doctor"/></returns>
-    public List<Doctor> GetAll() => _doctors;
+    public async Task<List<Doctor>> GetAll() => await context.Doctors.ToListAsync();
 
     /// <summary>
     /// Вернуть доктора по идентификатору
     /// </summary>
     /// <param name="id">идентификатор доктора</param>
     /// <returns><see cref="Doctor"/></returns>
-    public Doctor? Get(int id) => _doctors.Find(d => d.Id == id);
+    public async Task<Doctor?> Get(int id) => await context.Doctors.FindAsync(id);
 
     /// <summary>
     /// Удалить доктора по идентификатору
     /// </summary>
     /// <param name="id">идентификатор доктора</param>
     /// <returns>false при ошибке,true иначе</returns>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var deletedDoctor = Get(id);
+        var deletedDoctor = await Get(id);
 
         if (deletedDoctor == null) return false;
 
-        return _doctors.Remove(deletedDoctor);
+        context.Doctors.Remove(deletedDoctor);
+        await context.SaveChangesAsync();   
+
+        return true;
     }
 
     /// <summary>
     /// Добавить доктора
     /// </summary>
     /// <param name="newObj">объект класса доктора</param>
-    public void Post(Doctor newObj) 
+    public async Task Post(Doctor newObj) 
     {
-        newObj.Id = _id;
-        _id++;
-        _doctors.Add(newObj);
+        await context.Doctors.AddAsync(newObj);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -51,18 +52,14 @@ public class DoctorRepository : IRepository<Doctor, int>
     /// <param name="newObj">объект класса доктора</param>
     /// <param name="id">идентификатор доктора</param>
     /// <returns>false при ошибке,true иначе</returns>
-    public bool Put(Doctor newObj, int id)
+    public async Task<bool> Put(Doctor newObj, int id)
     {
-        var oldDoctor = Get(id);
+        var oldDoctor = await Get(id);
 
         if (oldDoctor == null) return false;
 
-        oldDoctor.Id = newObj.Id;
-        oldDoctor.Passport = newObj.Passport;
-        oldDoctor.Birth = newObj.Birth;
-        oldDoctor.FullName = newObj.FullName;
-        oldDoctor.Experience = newObj.Experience;
-        oldDoctor.Specialization = newObj.Specialization;
+        context.Doctors.Update(newObj);
+        await context.SaveChangesAsync();
 
         return true;
     }

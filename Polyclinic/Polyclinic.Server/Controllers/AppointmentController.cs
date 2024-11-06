@@ -16,7 +16,7 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
     /// <returns><see cref="Appointment"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
-    public ActionResult<IEnumerable<Appointment>> Get() => Ok(repositoryAppointment.GetAll());
+    public async Task<ActionResult<IEnumerable<Appointment>>> Get() => Ok(await repositoryAppointment.GetAll());
 
     /// <summary>
     /// Вернуть посещение по идентификатору
@@ -25,9 +25,9 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
     /// <returns><see cref="Appointment"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("{id}")]
-    public ActionResult<Appointment> Get(int id)
+    public async Task<ActionResult<Appointment>> Get(int id)
     {
-        var appointment = repositoryAppointment.Get(id);
+        var appointment = await repositoryAppointment.Get(id);
 
         return appointment != null ? Ok(appointment) : NotFound();
     }
@@ -39,14 +39,14 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPost]
-    public IActionResult Post([FromBody] AppointmentDto value)
+    public async Task<IActionResult> Post([FromBody] AppointmentDto value)
     {
-        var patient = repositoryPatient.Get(value.IdPatient);
+        var patient = await repositoryPatient.Get(value.IdPatient);
 
         if (patient == null)
             return NotFound("patient not found");
 
-        var doctor = repositoryDoctor.Get(value.IdDoctor);
+        var doctor = await repositoryDoctor.Get(value.IdDoctor);
 
         if (doctor == null)
             return NotFound("doctor not found");
@@ -58,7 +58,7 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
         if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
             appointment.Conclusion = conclusion;
 
-        repositoryAppointment.Post(appointment);
+        await repositoryAppointment.Post(appointment);
 
         return Ok();
     }
@@ -71,14 +71,14 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] AppointmentDto value) 
+    public async Task<IActionResult> Put(int id, [FromBody] AppointmentDto value) 
     {
-        var patient = repositoryPatient.Get(value.IdPatient);
+        var patient = await repositoryPatient.Get(value.IdPatient);
 
         if (patient == null)
             return NotFound("patient not found");
 
-        var doctor = repositoryDoctor.Get(value.IdDoctor);
+        var doctor = await repositoryDoctor.Get(value.IdDoctor);
 
         if (doctor == null)
             return NotFound("doctor not found");
@@ -92,7 +92,7 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
 
         appointment.Id = id;
 
-        return !repositoryAppointment.Put(appointment, id) ? NotFound() : Ok(); 
+        return await repositoryAppointment.Put(appointment, id) ? Ok() : NotFound(); 
     }
 
     /// <summary>
@@ -102,5 +102,5 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id) => !repositoryAppointment.Delete(id) ? NotFound() : Ok();
+    public async Task<IActionResult> Delete(int id) => await repositoryAppointment.Delete(id) ? Ok() : NotFound();
 }

@@ -16,7 +16,7 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <returns><see cref="Doctor"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
-    public ActionResult<IEnumerable<Doctor>> Get() => Ok(repository.GetAll());
+    public async Task<ActionResult<IEnumerable<Doctor>>> Get() => Ok(await repository.GetAll());
 
     /// <summary>
     /// Вернуть доктора по идентификатору
@@ -25,9 +25,9 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <returns><see cref="Doctor"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("{id}")]
-    public ActionResult<Doctor> Get(int id)
+    public async Task<ActionResult<Doctor>> Get(int id)
     {
-        var doctor = repository.Get(id);
+        var doctor = await repository.Get(id);
 
         return doctor != null ? Ok(doctor) : NotFound();
     }
@@ -39,14 +39,14 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPost]
-    public IActionResult Post([FromBody] DoctorDto value)
+    public async Task<IActionResult> Post([FromBody] DoctorDto value)
     {
         var doctor = mapper.Map<Doctor>(value);
 
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
 
-        repository.Post(doctor);
+        await repository.Post(doctor);
 
         return Ok();
     }
@@ -59,14 +59,14 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] DoctorDto value)
+    public async Task<IActionResult> Put(int id, [FromBody] DoctorDto value)
     {
         var doctor = mapper.Map<Doctor>(value);
 
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
 
-        return !repository.Put(doctor, id) ? NotFound() : Ok();
+        return await repository.Put(doctor, id) ? Ok() : NotFound();
     }
 
     /// <summary>
@@ -76,5 +76,5 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id) => !repository.Delete(id) ? NotFound() : Ok();
+    public async Task<IActionResult> Delete(int id) => await repository.Delete(id) ? Ok() : NotFound();
 }

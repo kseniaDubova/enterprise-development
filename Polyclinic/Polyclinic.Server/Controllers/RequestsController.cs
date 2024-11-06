@@ -18,9 +18,11 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns><see cref="Doctor"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("experience-doctors")]
-    public ActionResult<IEnumerable<Doctor>> GetExperienceDoctors()
+    public async Task<ActionResult<IEnumerable<Doctor>>> GetExperienceDoctors()
     {
-        var doctors = repositoryDoctor.GetAll()
+        var _doctors = await repositoryDoctor.GetAll();
+
+        var doctors = _doctors
             .Where(d => d.Experience > 10).ToList();
 
         return Ok(doctors);
@@ -33,9 +35,11 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("patients-of-doctor/{id}")]
-    public ActionResult<IEnumerable<Patient>> GetPatientsOfDoctor(int id)
+    public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsOfDoctor(int id)
     {
-        var patients = repositoryAppointment.GetAll()
+        var _patients = await repositoryAppointment.GetAll();
+
+        var patients = _patients
             .Where(a => a.Doctor.Id == id)
             .Select(p => p.Patient)
             .Distinct()
@@ -51,9 +55,11 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("healthy-patients")]
-    public ActionResult<IEnumerable<Patient>> GetHealthyPatients()
+    public async Task<ActionResult<IEnumerable<Patient>>> GetHealthyPatients()
     {
-        var patients = repositoryAppointment.GetAll()
+        var _patients = await repositoryAppointment.GetAll();
+
+        var patients = _patients
             .Where(a => a.Conclusion == ConclusionTypes.Healthy)
             .Select(p => p.Patient)
             .Distinct()
@@ -68,11 +74,13 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("count-appointment")]
-    public IActionResult GetCountAppointment()
+    public async Task<IActionResult> GetCountAppointment()
     {
-        var month = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);    
+        var month = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-        var appointments = repositoryAppointment.GetAll()
+        var _appointments = await repositoryAppointment.GetAll();
+
+        var appointments = _appointments
             .Where(a => a.Date >= month)
             .GroupBy(p => p.Doctor.Passport)
             .Select(g => new
@@ -92,9 +100,11 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("spetialisation-top")]
-    public IActionResult GetSpetialisationTop()
+    public async Task<IActionResult> GetSpetialisationTop()
     {
-        var spetializations = repositoryAppointment.GetAll()
+        var _spetializations = await repositoryAppointment.GetAll();
+
+        var spetializations = _spetializations
             .GroupBy(p => p.Doctor.Specialization)
             .Select(g => new
             {
@@ -114,11 +124,13 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("patients-with-several-appointment")]
-    public ActionResult<IEnumerable<Patient>> GetPatientsWithSeveralAppointment()
+    public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsWithSeveralAppointment()
     {
         var today = DateTime.Now;
 
-        var patients = repositoryAppointment.GetAll()
+        var _patients = await repositoryAppointment.GetAll();
+
+        var patients = _patients
             .Where(a => (today.Year - a.Patient.Birth.Year) > 30)
             .GroupBy(p => p.Patient)
             .Where(g => g.Select(a => a.Doctor.Passport).Distinct().Count() > 1)

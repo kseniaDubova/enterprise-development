@@ -1,48 +1,49 @@
-﻿namespace Polyclinic.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Polyclinic.Domain.Repositories;
 /// <summary>
 /// Репозиторий посещений
 /// </summary>
-public class AppointmentRepository : IRepository<Appointment, int>
+public class AppointmentRepository(PolyclinicDbContext context) : IRepository<Appointment, int>
 {
-    private int _id = 0;
-    private static readonly List<Appointment> _appointments = [];
-
     /// <summary>
     /// Вернуть все посещения
     /// </summary>
     /// <returns><see cref="Appointment"/></returns>
-    public List<Appointment> GetAll() => _appointments;
+    public async Task<List<Appointment>> GetAll() => await context.Appointments.ToListAsync();
 
     /// <summary>
     /// Вернуть посещение по идентификатору
     /// </summary>
     /// <param name="id">идентификатор посещений</param>
     /// <returns><see cref="Appointment"/></returns>
-    public Appointment? Get(int id) => _appointments.Find(a => a.Id == id);
+    public async Task<Appointment?> Get(int id) => await context.Appointments.FindAsync(id);
 
     /// <summary>
     /// Удалить почещение по идентификатору
     /// </summary>
     /// <param name="id">идентификатор посещений</param>
     /// <returns>false при ошибке,true иначе</returns>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var deletedAppounment = Get(id);
+        var deletedAppounment = await Get(id);
 
         if (deletedAppounment == null) return false;
 
-        return _appointments.Remove(deletedAppounment);
+        context.Appointments.Remove(deletedAppounment);
+        await context.SaveChangesAsync();
+
+        return true;
     }
 
     /// <summary>
     /// Добавить посещение
     /// </summary>
     /// <param name="newObj">объект класса посещений</param>
-    public void Post(Appointment newObj) 
+    public async Task Post(Appointment newObj) 
     {
-        newObj.Id = _id;
-        _id++;
-        _appointments.Add(newObj);
+        await context.Appointments.AddAsync(newObj);
+        await context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -51,17 +52,14 @@ public class AppointmentRepository : IRepository<Appointment, int>
     /// <param name="newObj">объект класса посещений</param>
     /// <param name="id">идентификатор посещений</param>
     /// <returns>false при ошибке,true иначе</returns>
-    public bool Put(Appointment newObj, int id)
+    public async Task<bool> Put(Appointment newObj, int id)
     {
-        var oldAppointment = Get(id);
+        var oldAppointment = await Get(id);
 
         if (oldAppointment == null) return false;
 
-        oldAppointment.Id = newObj.Id;
-        oldAppointment.Patient = newObj.Patient;
-        oldAppointment.Doctor = newObj.Doctor;
-        oldAppointment.Date = newObj.Date;
-        oldAppointment.Conclusion = newObj.Conclusion;
+        context.Appointments.Update(newObj);
+        await context.SaveChangesAsync();
 
         return true;
     }

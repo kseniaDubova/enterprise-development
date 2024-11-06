@@ -20,7 +20,7 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet]
-    public ActionResult<IEnumerable<Patient>> Get() => Ok(repository.GetAll());
+    public async Task<ActionResult<IEnumerable<Patient>>> Get() => Ok(await repository.GetAll());
 
     /// <summary>
     /// Вернуть пациента по идентификатору
@@ -29,9 +29,9 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("{id}")]
-    public ActionResult<Patient> Get(int id)
+    public async Task<ActionResult<Patient>> Get(int id)
     {
-        var patient = repository.Get(id);
+        var patient = await repository.Get(id);
 
         return patient != null ? Ok(patient) : NotFound();
     }
@@ -43,10 +43,10 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPost]
-    public IActionResult Post([FromBody] PatientDto value)
+    public async Task<IActionResult> Post([FromBody] PatientDto value)
     {
         var patient = mapper.Map<Patient>(value);
-        repository.Post(patient);
+        await repository.Post(patient);
 
         return Ok();
     }
@@ -59,7 +59,7 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
-    public IActionResult Put(int id, [FromBody] PatientDto value) => !repository.Put(mapper.Map<Patient>(value), id) ? NotFound() : Ok();
+    public async Task<IActionResult> Put(int id, [FromBody] PatientDto value) => await repository.Put(mapper.Map<Patient>(value), id) ? Ok() : NotFound();
 
     /// <summary>
     /// Удалить пациента по идентификатору
@@ -68,5 +68,5 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpDelete("{id}")] 
-    public IActionResult Delete(int id) => !repository.Delete(id) ? NotFound() : Ok();
+    public async Task<IActionResult> Delete(int id) => await repository.Delete(id) ? Ok() : NotFound();
 }
