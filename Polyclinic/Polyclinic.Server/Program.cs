@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var connectionString = builder.Configuration["ConnectionStrings:mysql"];
+var connectionString = builder.Configuration["ConnectionStrings:MySql"];
 builder.Services.AddDbContext<PolyclinicDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 

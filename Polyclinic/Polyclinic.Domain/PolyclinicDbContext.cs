@@ -10,7 +10,22 @@ public class PolyclinicDbContext(DbContextOptions<PolyclinicDbContext> options) 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-    }
+        modelBuilder.Entity<Appointment>()
+             .HasOne(a => a.Patient)
+             .WithMany()
+             .HasForeignKey("PatientId");
 
+        modelBuilder.Entity<Appointment>()
+             .HasOne(a => a.Doctor)
+             .WithMany()
+             .HasForeignKey("DoctorId");
+
+        modelBuilder.Entity<Appointment>()
+            .Property(d => d.Conclusion)
+            .HasConversion(c => c.ToString(), c => (ConclusionTypes)Enum.Parse(typeof(ConclusionTypes), c));
+
+        modelBuilder.Entity<Doctor>()
+            .Property(d => d.Specialization)
+            .HasConversion(s => s.ToString(), s => (SpecializationTypes)Enum.Parse(typeof(SpecializationTypes), s));
+    }
 }

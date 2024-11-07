@@ -99,12 +99,12 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// </summary>
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
-    [HttpGet("spetialisation-top")]
+    [HttpGet("disease-top")]
     public async Task<IActionResult> GetSpetialisationTop()
     {
-        var _spetializations = await repositoryAppointment.GetAll();
+        var _spetialisations = await repositoryAppointment.GetAll();
 
-        var spetializations = _spetializations
+        var spetialisations = _spetialisations
             .GroupBy(p => p.Doctor.Specialization)
             .Select(g => new
             {
@@ -115,7 +115,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
             .Take(5)
             .ToList();
 
-        return Ok(spetializations);
+        return Ok(spetialisations);
     }
 
     /// <summary>

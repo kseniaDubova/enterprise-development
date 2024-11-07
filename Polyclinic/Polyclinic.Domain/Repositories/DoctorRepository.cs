@@ -58,7 +58,13 @@ public class DoctorRepository(PolyclinicDbContext context) : IRepository<Doctor,
 
         if (oldDoctor == null) return false;
 
-        context.Doctors.Update(newObj);
+        oldDoctor.Birth = newObj.Birth;
+        oldDoctor.FullName = newObj.FullName;
+        oldDoctor.Passport = newObj.Passport;
+        oldDoctor.Experience = newObj.Experience;
+        oldDoctor.Specialization = newObj.Specialization;   
+
+        context.Doctors.Update(oldDoctor);
         await context.SaveChangesAsync();
 
         return true;

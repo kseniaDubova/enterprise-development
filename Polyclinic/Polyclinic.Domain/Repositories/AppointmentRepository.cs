@@ -58,7 +58,12 @@ public class AppointmentRepository(PolyclinicDbContext context) : IRepository<Ap
 
         if (oldAppointment == null) return false;
 
-        context.Appointments.Update(newObj);
+        oldAppointment.Patient = newObj.Patient;
+        oldAppointment.Conclusion = newObj.Conclusion;  
+        oldAppointment.Date = newObj.Date;
+        oldAppointment.Doctor = newObj.Doctor;
+
+        context.Appointments.Update(oldAppointment);
         await context.SaveChangesAsync();
 
         return true;
