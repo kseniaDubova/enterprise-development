@@ -12,8 +12,8 @@ using Polyclinic.Domain;
 namespace Polyclinic.Domain.Migrations
 {
     [DbContext(typeof(PolyclinicDbContext))]
-    [Migration("20241106153839_migr")]
-    partial class migr
+    [Migration("20241113181551_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace Polyclinic.Domain.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("Conclusion")
-                        .HasColumnType("int");
+                    b.Property<string>("Conclusion")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -76,8 +76,9 @@ namespace Polyclinic.Domain.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Specialization")
-                        .HasColumnType("int");
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 

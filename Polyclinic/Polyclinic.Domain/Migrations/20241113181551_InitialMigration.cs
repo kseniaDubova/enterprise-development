@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Polyclinic.Domain.Migrations
 {
     /// <inheritdoc />
-    public partial class migr : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,7 +27,8 @@ namespace Polyclinic.Domain.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Birth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Experience = table.Column<double>(type: "double", nullable: false),
-                    Specialization = table.Column<int>(type: "int", nullable: false)
+                    Specialization = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -64,7 +65,8 @@ namespace Polyclinic.Domain.Migrations
                     PatientId = table.Column<int>(type: "int", nullable: false),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Conclusion = table.Column<int>(type: "int", nullable: true)
+                    Conclusion = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

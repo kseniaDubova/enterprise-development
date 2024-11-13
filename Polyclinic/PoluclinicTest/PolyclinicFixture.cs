@@ -1,5 +1,4 @@
-﻿using PolyclinicClasses;
-
+﻿using Polyclinic.Domain;
 namespace PoluclinicTest;
 
 /// <summary>
