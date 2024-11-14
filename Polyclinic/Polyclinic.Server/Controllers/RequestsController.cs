@@ -20,33 +20,27 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("experience-doctors")]
     public async Task<ActionResult<IEnumerable<Doctor>>> GetExperienceDoctors()
     {
-        var doctorsRep = await repositoryDoctor.GetAll();
+        var doctors = await repositoryDoctor.GetAll();
 
-        var doctors = doctorsRep
-            .Where(d => d.Experience > 10).ToList();
-
-        return Ok(doctors);
+        return Ok(doctors.Where(d => d.Experience > 10).ToList());
     }
 
     /// <summary>
     /// Вывод всех пациентов указанного доктора, сортировка по имени
     /// </summary>
-    /// <param name="id">идентификатор пациента</param>
+    /// <param name="id">идентификатор доктора</param>
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("patients-of-doctor/{id}")]
     public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsOfDoctor(int id)
     {
-        var patientsRep = await repositoryAppointment.GetAll();
+        var patients = await repositoryAppointment.GetAll();
 
-        var patients = patientsRep
-            .Where(a => a.Doctor.Id == id)
+        return Ok(patients.Where(a => a.Doctor.Id == id)
             .Select(p => p.Patient)
             .Distinct()
             .OrderBy(p => p.FullName)
-            .ToList();
-
-        return Ok(patients);
+            .ToList());
     }
 
     /// <summary>
@@ -57,15 +51,12 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("healthy-patients")]
     public async Task<ActionResult<IEnumerable<Patient>>> GetHealthyPatients()
     {
-        var patientsRep = await repositoryAppointment.GetAll();
+        var patients = await repositoryAppointment.GetAll();
 
-        var patients = patientsRep
-            .Where(a => a.Conclusion == ConclusionTypes.Healthy)
+        return Ok(patients.Where(a => a.Conclusion == ConclusionTypes.Healthy)
             .Select(p => p.Patient)
             .Distinct()
-            .ToList();
-
-        return Ok(patients);
+            .ToList());
     }
 
     /// <summary>
@@ -78,20 +69,17 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     {
         var month = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
 
-        var appointmentsRep = await repositoryAppointment.GetAll();
+        var appointments = await repositoryAppointment.GetAll();
 
-        var appointments = appointmentsRep
-            .Where(a => a.Date >= month)
-            .GroupBy(p => p.Doctor.Passport)
+        return Ok(appointments.Where(a => a.Date >= month)
+            .GroupBy(p => p.Doctor.Id)
             .Select(g => new
             {
                 Doctor = g.Key,
                 Count = g.Count(),
             })
             .OrderBy(g => g.Doctor)
-            .ToList();
-
-        return Ok(appointments);
+            .ToList());
     }
 
     /// <summary>
@@ -102,10 +90,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("disease-top")]
     public async Task<IActionResult> GetSpetializationTop()
     {
-        var spetializationsRep = await repositoryAppointment.GetAll();
+        var spetializations = await repositoryAppointment.GetAll();
 
-        var spetializations = spetializationsRep
-            .GroupBy(p => p.Doctor.Specialization)
+        return Ok(spetializations.GroupBy(p => p.Doctor.Specialization)
             .Select(g => new
             {
                 Specialization = g.Key,
@@ -113,13 +100,11 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
             })
             .OrderByDescending(g => g.Count)
             .Take(5)
-            .ToList();
-
-        return Ok(spetializations);
+            .ToList());
     }
 
     /// <summary>
-    /// Вывод пациентов, записаных к нескольким врачам, сортировка по дате рождения
+    /// Вывод пациентов, записаных к нескольким врачам, сортировка по дате рождения (старше 30 лет)
     /// </summary>
     /// <returns><see cref="Patient"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
@@ -128,17 +113,14 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     {
         var today = DateTime.Now;
 
-        var patientsRep = await repositoryAppointment.GetAll();
+        var patients = await repositoryAppointment.GetAll();
 
-        var patients = patientsRep
-            .Where(a => (today.Year - a.Patient.Birth.Year) > 30)
+        return Ok(patients.Where(a => (today.Year - a.Patient.Birth.Year) > 30)
             .GroupBy(p => p.Patient)
-            .Where(g => g.Select(a => a.Doctor.Passport).Distinct().Count() > 1)
+            .Where(g => g.Select(a => a.Doctor.Id).Distinct().Count() > 1)
             .Select(g => g.Key)
             .OrderBy(p => p.Birth)
-            .ToList();
-
-        return Ok(patients); 
+            .ToList()); 
     }
 
 }

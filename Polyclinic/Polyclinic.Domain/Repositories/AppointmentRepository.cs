@@ -10,14 +10,14 @@ public class AppointmentRepository(PolyclinicDbContext context) : IRepository<Ap
     /// Вернуть все посещения
     /// </summary>
     /// <returns><see cref="Appointment"/></returns>
-    public async Task<List<Appointment>> GetAll() => await context.Appointments.ToListAsync();
+    public async Task<List<Appointment>> GetAll() => await context.Appointments.Include(a => a.Doctor).Include(a => a.Patient).ToListAsync();
 
     /// <summary>
     /// Вернуть посещение по идентификатору
     /// </summary>
     /// <param name="id">идентификатор посещений</param>
     /// <returns><see cref="Appointment"/></returns>
-    public async Task<Appointment?> Get(int id) => await context.Appointments.FindAsync(id);
+    public async Task<Appointment?> Get(int id) => await context.Appointments.Include(a => a.Doctor).Include(a => a.Patient).FirstOrDefaultAsync(a => a.Id == id);
 
     /// <summary>
     /// Удалить почещение по идентификатору
