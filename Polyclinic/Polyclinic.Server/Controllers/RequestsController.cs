@@ -34,9 +34,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("patients-of-doctor/{id}")]
     public async Task<ActionResult<IEnumerable<Patient>>> GetPatientsOfDoctor(int id)
     {
-        var patients = await repositoryAppointment.GetAll();
+        var appointments = await repositoryAppointment.GetAll();
 
-        return Ok(patients.Where(a => a.Doctor.Id == id)
+        return Ok(appointments.Where(a => a.Doctor.Id == id)
             .Select(p => p.Patient)
             .Distinct()
             .OrderBy(p => p.FullName)
@@ -51,9 +51,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("healthy-patients")]
     public async Task<ActionResult<IEnumerable<Patient>>> GetHealthyPatients()
     {
-        var patients = await repositoryAppointment.GetAll();
+        var appointments = await repositoryAppointment.GetAll();
 
-        return Ok(patients.Where(a => a.Conclusion == ConclusionTypes.Healthy)
+        return Ok(appointments.Where(a => a.Conclusion == ConclusionTypes.Healthy)
             .Select(p => p.Patient)
             .Distinct()
             .ToList());
@@ -90,9 +90,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     [HttpGet("disease-top")]
     public async Task<IActionResult> GetSpetializationTop()
     {
-        var spetializations = await repositoryAppointment.GetAll();
+        var appointments = await repositoryAppointment.GetAll();
 
-        return Ok(spetializations.GroupBy(p => p.Doctor.Specialization)
+        return Ok(appointments.GroupBy(p => p.Doctor.Specialization)
             .Select(g => new
             {
                 Specialization = g.Key,
@@ -113,9 +113,9 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     {
         var today = DateTime.Now;
 
-        var patients = await repositoryAppointment.GetAll();
+        var appointments = await repositoryAppointment.GetAll();
 
-        return Ok(patients.Where(a => (today.Year - a.Patient.Birth.Year) > 30)
+        return Ok(appointments.Where(a => (today.Year - a.Patient.Birth.Year) > 30)
             .GroupBy(p => p.Patient)
             .Where(g => g.Select(a => a.Doctor.Id).Distinct().Count() > 1)
             .Select(g => g.Key)
