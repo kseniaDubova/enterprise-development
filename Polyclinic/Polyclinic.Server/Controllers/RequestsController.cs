@@ -88,7 +88,7 @@ public class RequestsController(IRepository<Doctor, int> repositoryDoctor, IRepo
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpGet("disease-top")]
-    public async Task<IActionResult> GetSpetializationTop()
+    public async Task<IActionResult> GetSpecializationTop()
     {
         var appointments = await repositoryAppointment.GetAll();
 
