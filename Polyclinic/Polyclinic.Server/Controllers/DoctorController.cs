@@ -46,6 +46,11 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
 
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Birth < minDate || value.Birth > maxDate)
+            return BadRequest("Uncorrect date");
+
         await repository.Post(doctor);
 
         return Ok();
@@ -65,6 +70,11 @@ public class DoctorController(IRepository<Doctor, int> repository, IMapper mappe
 
         if (Enum.TryParse<SpecializationTypes>(value.Specialization, out var specialization))
             doctor.Specialization = specialization;
+
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Birth < minDate || value.Birth > maxDate)
+            return BadRequest("Uncorrect date");
 
         return await repository.Put(doctor, id) ? Ok() : NotFound();
     }

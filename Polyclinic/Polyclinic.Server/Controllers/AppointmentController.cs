@@ -58,6 +58,11 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
         if (Enum.TryParse<ConclusionTypes>(value.Conclusion, out var conclusion))
             appointment.Conclusion = conclusion;
 
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Date < minDate || value.Date > maxDate)
+            return BadRequest("Uncorrect date");
+
         await repositoryAppointment.Post(appointment);
 
         return Ok();
@@ -91,6 +96,11 @@ public class AppointmentController(IRepository<Appointment, int> repositoryAppoi
             appointment.Conclusion = conclusion;
 
         appointment.Id = id;
+
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Date < minDate || value.Date > maxDate)
+            return BadRequest("Uncorrect date");
 
         return await repositoryAppointment.Put(appointment, id) ? Ok() : NotFound(); 
     }

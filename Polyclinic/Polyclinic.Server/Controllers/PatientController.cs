@@ -48,6 +48,11 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
         var patient = mapper.Map<Patient>(value);
         await repository.Post(patient);
 
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Birth < minDate || value.Birth > maxDate)
+            return BadRequest("Uncorrect date");
+
         return Ok();
     }
 
@@ -59,7 +64,15 @@ public class PatientController(IRepository<Patient, int> repository, IMapper map
     /// <returns></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] PatientDto value) => await repository.Put(mapper.Map<Patient>(value), id) ? Ok() : NotFound();
+    public async Task<IActionResult> Put(int id, [FromBody] PatientDto value)
+    {
+        var minDate = new DateTime(1900, 1, 1);
+        var maxDate = DateTime.Today;
+        if (value.Birth < minDate || value.Birth > maxDate)
+            return BadRequest("Uncorrect date");
+
+        return await repository.Put(mapper.Map<Patient>(value), id) ? Ok() : NotFound(); 
+    }
 
     /// <summary>
     /// Удалить пациента по идентификатору
