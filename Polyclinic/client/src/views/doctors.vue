@@ -56,15 +56,19 @@ export default {
 
         async setDoctor(doctor) {
             await api.addDoctor(doctor);
-            console.log(doctor);
+            this.getDoctors();
+            this.add = false;
         },
 
         async clickDelete(id) {
-            await api.deleteDoctor(id)
+            await api.deleteDoctor(id);
+            this.getDoctors();
         },
 
         async updateDoctor(doctor) {
             await api.putDoctor(this.id_update, doctor);
+            this.getDoctors();
+            this.update = false;
         },
 
         toggleUpdate(id) {
@@ -74,7 +78,6 @@ export default {
 
         toggleAdd() {
             this.add = !this.add;
-            console.log(this.add)
         },
     },
 }

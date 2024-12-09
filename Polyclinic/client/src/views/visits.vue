@@ -70,26 +70,28 @@ export default {
 
         async setVisit(visits) {
             await api.addVisit(visits);
-            console.log(visits);
+            this.getVisits();
+            this.add = false;
         },
 
         async clickDelete(id) {
             await api.deleteVisit(id);
+            this.getVisits();
         },
 
         async updateVisit(visit) {
             await api.putVisit(this.id_update, visit);
+            this.getVisits();
+            this.update = false;
         },
 
         toggleUpdate(id) {
             this.update = !this.update; 
             this.id_update = id != null ? id : this.id_update;
-            console.log(this.id_update)
         },
 
         toggleAdd() {
             this.add = !this.add;
-            console.log(this.add)
         },
     },
 }

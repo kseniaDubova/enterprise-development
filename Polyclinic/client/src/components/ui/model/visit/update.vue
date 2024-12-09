@@ -5,7 +5,7 @@
         <div>
           <UIDropdown 
             :options="patients" 
-            :select="form.c_patient"
+            :select="visit.patient"
             :style="{marginBottom: '20px' }"
             @changed="setPatient"
           />
@@ -14,21 +14,21 @@
         <div>
           <UIDropdown 
             :options="doctors" 
-            :select="form.c_doctor"
+            :select="visit.doctor"
             :style="{marginBottom: '20px' }"
             @changed="setDoctor"
           />
         </div>
         
         <div class="form-group">
-          <label for="date">Дата рождения</label>
-          <input type="date" id="date" v-model="form.c_date" :placeholder="form.c_date" required />
+          <label for="date">Дата</label>
+          <input type="date" :min="'1900-01-01'" :max="getMaxDate()" id="date" v-model="form.c_date" :placeholder="form.c_date" required />
         </div>
         
         <div>
           <UIDropdown 
             :options="getOptions()" 
-            :select="form.c_conclusion"
+            :select="visit.conclusion"
             @changed="setConclusion"
           />
         </div>
@@ -44,6 +44,11 @@ import UIDropdown from "@/components/ui/dropdown/dropdown.vue"
 const EXP = {
   0: "Healthy",
   1: "NotHealthy",
+};
+
+const EXP_RU = {
+  "Здоров": "Healthy",
+  "Не здоров": "NotHealthy",
 };
 
 export default {
@@ -72,10 +77,10 @@ export default {
     data() {
       return {
         form: {
-          c_patient: this.visit.patient,
-          c_doctor: this.visit.doctor,
+          c_patient: this.patients.find(p => p.fullName == this.visit.patient).id,
+          c_doctor: this.doctors.find(d => d.fullName == this.visit.doctor).id,
           c_date: this.visit.date,
-          c_conclusion: this.visit.conclusion,
+          c_conclusion: EXP_RU[this.visit.conclusion],
         },
       };
     },
@@ -83,8 +88,8 @@ export default {
     methods: {
       submitForm() {
         const visit = {
-          patient: this.form.c_patient,
-          doctor: this.form.c_doctor,
+          idPatient: this.form.c_patient,
+          idDoctor: this.form.c_doctor,
           date: new Date(this.form.c_date).toISOString(),
           conclusion: this.form.c_conclusion,
         };
@@ -102,7 +107,16 @@ export default {
       },
 
       setDoctor(id) {
-        this.form.c_doctor = this.doctors.find(d => d.id === id).id
+        this.form.c_doctor = this.doctors.find(d => d.id === id).id;
+      },
+
+      getMaxDate() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
       },
 
       getOptions() {

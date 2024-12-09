@@ -14,7 +14,7 @@
         
         <div class="form-group">
           <label for="dob">Дата рождения</label>
-          <input type="date" id="dob" v-model="form.c_dob" :placeholder="patient.dob" required />
+          <input type="date" id="dob" :min="'1900-01-01'" :max="getMaxDate()" v-model="form.c_dob" :placeholder="patient.dob" required />
         </div>
         
         <div class="form-group">
@@ -64,6 +64,15 @@ export default {
         this.$emit('form', patient);
         console.log("Данные пациента:", patient);
       },
+
+      getMaxDate() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+      }
     },
 };
 </script>

@@ -22,7 +22,7 @@
         
         <div class="form-group">
           <label for="dob">Дата</label>
-          <input type="date" id="dob" v-model="form.date" required />
+          <input type="date" :min="'1900-01-01'" :max="getMaxDate()" id="date" v-model="form.date" required />
         </div>
         
         <div>
@@ -83,14 +83,13 @@ export default {
           alert('Введите все данные');
         } else {
           const visit = {
-            patient: this.form.patient,
-            doctor: this.form.doctor,
+            idPatient: this.form.patient,
+            idDoctor: this.form.doctor,
             date: new Date(this.form.date).toISOString(),
             conclusion: this.form.conclusion ? this.form.conclusion : "NotHealthy",
           };
 
           this.$emit('form', visit);
-          console.log("Данные посещения:", visit);          
         }
       },
 
@@ -103,7 +102,16 @@ export default {
       },
 
       setDoctor(id) {
-        this.form.doctor = this.doctors.find(d => d.id === id).id
+        this.form.doctor = this.doctors.find(d => d.id === id).id;
+      },
+
+      getMaxDate() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
       },
 
       getOptions() {

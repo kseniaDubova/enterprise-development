@@ -9,7 +9,13 @@
           @changed="setId"
         />
       </div>
-      <p class="ui-request__result">{{ result }}</p>
+      <UITable 
+        v-if="show_res"
+        :rows="result"
+        :button="false"
+        :grid="grid"
+        :headers="headers"
+      />
       <button class="ui-request__button" @click="getRes">Получить результат</button>
     </UICard>
   </div>
@@ -18,6 +24,7 @@
 <script>
 import UIDropdown from "@/components/ui/dropdown/dropdown.vue"
 import UICard from "@/components/ui/card/card.vue"
+import UITable from "@/components/ui/table/table.vue"
 
 export default {
     name: "UIRequest",
@@ -25,6 +32,13 @@ export default {
     components: {
       UICard,
       UIDropdown,
+      UITable,
+    },
+
+    data() {
+      return {
+        show_res: false,
+      };
     },
 
     props: {
@@ -32,7 +46,7 @@ export default {
         type: String,
       },
       result: {
-        type: String,
+        type: Array,
       },
       id: {
         type: Number,
@@ -45,11 +59,18 @@ export default {
         type: Array,
         default: null,
       },
+      grid: {
+        type: String,
+      },
+      headers: {
+        type: Array,
+      },
     },
 
     methods: {
       getRes() {
         this.$emit('getRes', this.id);
+        this.show_res=true;
       },
       setId(id) {
         this.$emit('doctorId', id);

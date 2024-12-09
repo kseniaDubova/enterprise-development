@@ -1,10 +1,22 @@
 import http from "@/api/http.js";
 
 export default class Api {
+    static EXP = {
+        0: "Терапевт",
+        1: "Хирург",
+        2: "Дантист",
+        3: "Вирусолог",
+        4: "Дерматолог",
+    };
     /// GET ///
 
     async getPatients() {
         const { data } = await http.get("/Patient");
+
+        for (let p of data) {
+            p.birth = p.birth.split("T")[0];
+        }
+
         return data;
     }
 
@@ -12,25 +24,17 @@ export default class Api {
         const { data } = await http.get("/Doctor");
         const doctors = [];
 
-        const EXP = {
-            0: "Терапевт",
-            1: "Хирург",
-            2: "Дантист",
-            3: "Вирусолог",
-            4: "Дерматолог",
-          };
-
-        for (let d in data) {
+        for (let d of data) {
             const tmp = {
                 id: d.id,
                 passport: d.passport,
                 fullName: d.fullName,
+                birth: d.birth.split("T")[0],
                 experience: d.experience,
-                specialization: EXP[d.specialization],
+                specialization: Api.EXP[d.specialization],
             }
-            doctors.push(tmp)
+            doctors.push(tmp);
         }
-        
         return doctors;
     }
 
@@ -38,18 +42,18 @@ export default class Api {
         const { data } = await http.get("/Appointment");
         const visits = [];
 
-        const EXP = {
+        const EXP_s = {
             0: "Здоров",
             1: "Не здоров",
         };
 
-        for (let v in data) {
+        for (let v of data) {
             const tmp = {
                 id: v.id,
                 patient: v.patient.fullName,
                 doctor: v.doctor.fullName,
-                date: v.date,
-                conclusion: EXP[v.conclusion],
+                date: v.date.split("T")[0],
+                conclusion: EXP_s[v.conclusion],
             }
             visits.push(tmp);
         }
@@ -61,31 +65,84 @@ export default class Api {
 
     async getExperienceDoctors() {
         const { data } = await http.get("/Requests/experience-doctors");
-        return data;
+        const res = [];
+
+        for (let d of data) {
+            const tmp = {
+                id: d.id,
+                passport: d.passport,
+                fullName: d.fullName,
+                birth: d.birth.split("T")[0],
+                experience: d.experience,
+                specialization: Api.EXP[d.specialization],
+            }
+            res.push(tmp);
+        }
+        console.log(res)
+
+        return res;
     }
 
     async getPatientsOfDoctors(id) {
         const { data } = await http.get(`/Requests/patients-of-doctor/${id}`);
+
+        for (let p of data) {
+            p.birth = p.birth.split("T")[0];
+        }
+
         return data;
     }
 
     async getHealthyPatients() {
         const { data } = await http.get("/Requests/healthy-patients");
+
+        for (let p of data) {
+            p.birth = p.birth.split("T")[0];
+        }
+
         return data;
     }
 
     async getCountAppointment() {
         const { data } = await http.get("/Requests/count-appointment");
-        return data;
+        const doctors = await this.getDoctors();
+        const res = [];
+
+        for (let d of data) {
+            const tmp = {
+                doctor: doctors.find(i => i.id === d.doctor).fullName,
+                count: d.count,
+            }
+            res.push(tmp);
+        }
+
+        return res;
     }
 
     async getDiseaseTop() {
         const { data } = await http.get("/Requests/disease-top");
-        return data;
+        const res = [];
+        let count = 1;
+
+        for (let d of data) {
+            const tmp = {
+                specialization: Api.EXP[d.specialization],
+                top: count,
+            }
+            res.push(tmp);
+            count =+ 1;
+        }
+
+        return res;
     }
 
     async getPatientWithSeveralAppointment() {
         const { data } = await http.get("/Requests/patients-with-several-appointment");
+
+        for (let p of data) {
+            p.birth = p.birth.split("T")[0];
+        }
+
         return data;
     }
 

@@ -6,7 +6,7 @@
           :key="index">
           {{ cell }}
       </div>
-      <div class="ui-table-row__button">
+      <div v-if="button" class="ui-table-row__button">
         <button class="ui-table-row__button-update">
             <img 
                 class="ui-table-row__button-img" 
@@ -14,7 +14,7 @@
                 @click="clickUpdate"
             >
         </button>
-        <button class="ui-table-row__button-delete">
+        <button v-if="button" class="ui-table-row__button-delete">
             <img 
                 class="ui-table-row__button-img" 
                 src="@/assets/img/trash.svg"
@@ -30,13 +30,17 @@
       name: 'UITableRow',
   
       props: {
-          cells: {
-              type: Object,
-          },
-          grid: {
-              type: String,
-              default: '1fr'
-          },
+        cells: {
+            type: Object,
+        },
+        grid: {
+            type: String,
+            default: '1fr'
+        },
+        button: {
+            type: Boolean,
+            default: true,
+        },
       },
   
       methods: {

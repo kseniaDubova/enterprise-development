@@ -45,10 +45,10 @@ export default {
                     label: "Id",
                 },
                 {
-                    label: "Имя",
+                    label: "Паспорт",
                 },
                 {
-                    label: "Паспорт",
+                    label: "Имя",
                 },
                 {
                     label: "Дата рождения",

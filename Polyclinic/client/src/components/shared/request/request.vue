@@ -10,6 +10,8 @@
         :id="item.id"
         :choose_id="item.search_id"
         :options="doctors"
+        :grid="item.grid"
+        :headers="item.headers"
         @getRes="getResult"
         @doctorId="setId"/>
     </div>

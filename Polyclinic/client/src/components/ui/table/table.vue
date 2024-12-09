@@ -4,7 +4,7 @@
         <h3 class="ui-table__label-text">
             {{ label }}
         </h3>
-        <img class="ui-table__label-img" src="@/assets/img/add.svg" @click="clickAdd()">
+        <img v-if="button" class="ui-table__label-img" src="@/assets/img/add.svg" @click="clickAdd()">
     </div>
     <div class="ui-table__table">
         <UITableHeader :headers="headers" :grid="grid"/>
@@ -14,7 +14,7 @@
                 v-for="row, index in rows"
                 :key="index"
                 >
-                <UITableRow :cells="row" :grid="grid" @update="clickUpdate" @delete="clickDelete"/>
+                <UITableRow :button="button" :cells="row" :grid="grid" @update="clickUpdate" @delete="clickDelete"/>
             </div>
         </div>
     </div>
@@ -46,6 +46,10 @@ export default {
         grid: {
             type: String,
             default: '1fr',
+        },
+        button: {
+            type: Boolean,
+            default: true,
         },
     },
 

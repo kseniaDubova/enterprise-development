@@ -14,7 +14,7 @@
         
         <div class="form-group">
           <label for="dob">Дата рождения</label>
-          <input type="date" id="dob" v-model="form.c_dob" :placeholder="doctor.birth" required />
+          <input type="date" :min="'1900-01-01'" :max="getMaxDate()" id="dob" v-model="form.c_dob" :placeholder="doctor.birth" required />
         </div>
         
         <div class="form-group">
@@ -26,7 +26,7 @@
           <UIDropdown 
             :options="getOptions()" 
             :select="doctor.specialization"
-            @changed="setSpecialization"
+            @changed="setSpetialization"
           />
         </div>
         
@@ -44,6 +44,14 @@ const EXP = {
   2: "Dentist",
   3: "Virologist",
   4: "Dermatologist",
+};
+
+const EXP_RU = {
+  "Терапевт": "Therapist",
+  "Хирург": "Surgeon",
+  "Дантист": "Dentist",
+  "Вирусолог": "Virologist",
+  "Дерматолог": "Dermatologist",
 };
 
 export default {
@@ -69,7 +77,7 @@ export default {
           c_fullName: this.doctor.fullName,
           c_passport: this.doctor.passport,
           c_dob: this.doctor.birth,
-          c_specialization: this.doctor.specialization,
+          c_specialization: EXP_RU[this.doctor.specialization],
           c_experience: this.doctor.experience,
         },
       };
@@ -89,9 +97,18 @@ export default {
         console.log("Данные доктора:", doctor);
       },
 
-      setSpecialization(id) {
+      setSpetialization(id) {
         console.log(EXP[id])
         this.form.c_specialization = EXP[id];
+      },
+
+      getMaxDate() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
       },
 
       getOptions() {
