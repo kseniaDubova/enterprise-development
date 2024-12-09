@@ -122,15 +122,13 @@ export default class Api {
     async getDiseaseTop() {
         const { data } = await http.get("/Requests/disease-top");
         const res = [];
-        let count = 1;
 
         for (let d of data) {
             const tmp = {
                 specialization: Api.EXP[d.specialization],
-                top: count,
+                top: d.count,
             }
             res.push(tmp);
-            count =+ 1;
         }
 
         return res;
